@@ -1,0 +1,79 @@
+import crypto from "crypto";
+import { patientModel } from "../models/patientModel.js";
+
+class PatientRepositoryInMemory {
+  patients = [];
+
+  async create({ id, name, birthDate }) {
+    try {
+      if (id == null || id == undefined) {
+        id = crypto.randomUUID();
+      }
+      const patient = patientModel.validateSync({
+        id,
+        name,
+        birthDate,
+      });
+      if (patient) {
+        this.patients.push(patient);
+        return patient;
+      }
+      throw new Error("Patient is Invalid");
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  async findByName(name) {
+    return this.patients.find((patient) => patient.name === name);
+  }
+
+  async findById(id) {
+    return this.patients.find((patient) => patient.id === id);
+  }
+
+  async list() {
+    const patientsList = this.patients.map(({ name, birthDate }) => {
+      return { name, birthDate };
+    });
+    return patientsList;
+  }
+
+  async removeById(patientId) {
+    const patientIndex = this.patients.findIndex(
+      (patient) => patient.id === patientId
+    );
+    if (patientIndex && patientIndex !== -1) {
+      return this.patients.splice(patientIndex, patientIndex);
+    }
+    throw new Error("Patient Not Found");
+  }
+
+  async updateById(patientId, newValues) {
+    let patientIndex = this.patients.findIndex(
+      (patient) => patient.id === patientId
+    );
+    if (patientIndex && patientIndex !== -1) {
+      const name = newValues.name || this.patients[patientIndex].name;
+      const birthDate =
+        newValues.birthDate || this.patients[patientIndex].birthDate;
+      const patientIsValid = patientModel.validateSync({
+        ...this.patients[patientIndex],
+        name,
+        birthDate,
+      });
+      if (patientIsValid) {
+        this.patients[patientIndex] = {
+          ...this.patients[patientIndex],
+          name,
+          birthDate,
+        };
+        return this.patients[patientIndex];
+      }
+      throw new Error("Patient is Invalid");
+    }
+    throw new Error("Patient Not Found");
+  }
+}
+
+export { PatientRepositoryInMemory };
