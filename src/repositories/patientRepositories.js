@@ -5,23 +5,19 @@ class PatientRepositoryInMemory {
   patients = [];
 
   async create({ id, name, birthDate }) {
-    try {
-      if (id == null || id == undefined) {
-        id = crypto.randomUUID();
-      }
-      const patient = patientModel.validateSync({
-        id,
-        name,
-        birthDate,
-      });
-      if (patient) {
-        this.patients.push(patient);
-        return patient;
-      }
-      throw new Error("Patient is Invalid");
-    } catch (error) {
-      return error.message;
+    if (id == null || id == undefined) {
+      id = crypto.randomUUID();
     }
+    const patient = patientModel.validateSync({
+      id,
+      name,
+      birthDate,
+    });
+    if (patient) {
+      this.patients.push(patient);
+      return patient;
+    }
+    throw new Error("Patient is Invalid");
   }
 
   async findByName(name) {
