@@ -1,8 +1,8 @@
 import express from "express";
-import morgan from "morgan";
 import dotenv from "dotenv";
-import { PatientRepositoryInMemory } from "./repositories/patientRepositories.js";
-import { SchedulesRepositoryInMemory } from "./repositories/scheduleRepositories.js";
+import morgan from "morgan";
+import { router } from "./routes/index.js";
+
 dotenv.config();
 
 const PORT = process.env.PORT || 3001;
@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 app.use(express.json());
+
+app.use(router);
 
 app.use(morgan("dev"));
 

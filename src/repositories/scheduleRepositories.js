@@ -10,10 +10,10 @@ class SchedulesRepositoryInMemory {
   }
   schedules = [];
 
-  async createSchedule({ id, daySchedule }) {
-    if (id == null || id == undefined) {
-      id = crypto.randomUUID();
-    }
+  async createSchedule({ /*id,*/ daySchedule }) {
+    // if (id == null || id == undefined) {
+    const id = crypto.randomUUID();
+    // }
     let day = new Date(daySchedule);
     day.setMinutes(0);
     day.setSeconds(0);
@@ -28,12 +28,12 @@ class SchedulesRepositoryInMemory {
         day,
         scheduleForHour: [],
       };
+      const scheduleIsValid = scheduleModel.validateSync({
+        ...schedule,
+      });
+      this.schedules.push(scheduleIsValid);
     }
 
-    const scheduleIsValid = scheduleModel.validateSync({
-      ...schedule,
-    });
-    this.schedules.push(scheduleIsValid);
     return schedule;
   }
 
@@ -114,13 +114,17 @@ class SchedulesRepositoryInMemory {
 
   async list() {
     const schedulesList = this.schedules.map(({ id, createdOn, ...rest }) => {
-      console.log(rest);
       return { ...rest };
     });
     return schedulesList;
   }
 
-  async updateStatusSchedule({ scheduleId, hour, patientId, newValues }) {
+  async updateStatusSchedule({
+    scheduleId,
+    hourSchedule,
+    patientId,
+    newValues,
+  }) {
     let scheduleIndex = this.schedules.findIndex(
       (schedule) => schedule.id === scheduleId
     );
@@ -134,17 +138,16 @@ class SchedulesRepositoryInMemory {
     ) {
       if (
         String(this.schedules[scheduleIndex].scheduleForHour[i].hour) ===
-          String(hour) &&
+          String(hourSchedule) &&
         this.schedules[scheduleIndex].scheduleForHour[i].patients[0].id ===
           patientId
       ) {
         let schedule = { ...this.schedules[scheduleIndex] };
-        console.log(schedule);
+        // console.log(schedule);
         schedule.scheduleForHour[i].patients[0].status =
           newValues.status || schedule.scheduleForHour[i].patients[0].status;
         schedule.scheduleForHour[i].patients[0].note =
-          newValues.note || schedule.scheduleForHour[i].patients[0].status;
-        console.log(12);
+          newValues.note || schedule.scheduleForHour[i].patients[0].note;
         const scheduleIsValid = scheduleModel.validateSync({
           ...schedule,
         });
@@ -152,22 +155,21 @@ class SchedulesRepositoryInMemory {
           this.schedules[scheduleIndex].scheduleForHour[i].patients[0].status =
             newValues.status || schedule.scheduleForHour[i].patients[0].status;
           this.schedules[scheduleIndex].scheduleForHour[i].patients[0].note =
-            newValues.note || schedule.scheduleForHour[i].patients[0].status;
+            newValues.note || schedule.scheduleForHour[i].patients[0].note;
           return schedule;
         }
       }
       if (
         String(this.schedules[scheduleIndex].scheduleForHour[i].hour) ===
-          String(hour) &&
+          String(hourSchedule) &&
         this.schedules[scheduleIndex].scheduleForHour[i].patients[1].id ===
           patientId
       ) {
         let schedule = { ...this.schedules[scheduleIndex] };
-        console.log(schedule);
         schedule.scheduleForHour[i].patients[1].status =
           newValues.status || schedule.scheduleForHour[i].patients[1].status;
         schedule.scheduleForHour[i].patients[1].note =
-          newValues.note || schedule.scheduleForHour[i].patients[1].status;
+          newValues.note || schedule.scheduleForHour[i].patients[1].note;
         const scheduleIsValid = scheduleModel.validateSync({
           ...schedule,
         });
@@ -175,7 +177,7 @@ class SchedulesRepositoryInMemory {
           this.schedules[scheduleIndex].scheduleForHour[i].patients[1].status =
             newValues.status || schedule.scheduleForHour[i].patients[1].status;
           this.schedules[scheduleIndex].scheduleForHour[i].patients[1].note =
-            newValues.note || schedule.scheduleForHour[i].patients[1].status;
+            newValues.note || schedule.scheduleForHour[i].patients[1].note;
           return schedule;
         }
       }

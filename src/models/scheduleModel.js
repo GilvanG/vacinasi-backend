@@ -1,5 +1,4 @@
 import * as yup from "yup";
-import moment from "moment";
 
 export let scheduleModel = yup.object().shape({
   id: yup

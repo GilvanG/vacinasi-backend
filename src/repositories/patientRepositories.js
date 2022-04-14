@@ -4,10 +4,10 @@ import { patientModel } from "../models/patientModel.js";
 class PatientRepositoryInMemory {
   patients = [];
 
-  async create({ id, name, birthDate }) {
-    if (id == null || id == undefined) {
-      id = crypto.randomUUID();
-    }
+  async create({ /*id,*/ name, birthDate }) {
+    // if (id == null || id == undefined) {
+    const id = crypto.randomUUID();
+    // }
     const patient = patientModel.validateSync({
       id,
       name,
