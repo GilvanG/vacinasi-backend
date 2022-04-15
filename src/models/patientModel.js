@@ -1,17 +1,17 @@
 import * as yup from "yup";
 
-export let pacientModel = yup.object().shape({
+export let patientModel = yup.object().shape({
   id: yup
-    .string("UserId data type is invalid")
-    .uuid()
-    .required("Userid field is required"),
+    .string("Id data type is invalid")
+    .uuid("Id is not uuid")
+    .required("Id field is required"),
   name: yup
-    .string("Username data type is invalid")
-    .required("Username field is required"),
+    .string("Name data type is invalid")
+    .required("Name field is required"),
   birthDate: yup
     .date("Birth date data type is invalid")
     .required("Birth date field is required"),
-  createdOn: yup.date().default(function () {
+  createdOn: yup.date("createdOn data type is invalid").default(function () {
     return new Date();
   }),
 });
