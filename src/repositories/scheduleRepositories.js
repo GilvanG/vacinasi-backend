@@ -31,6 +31,7 @@ class SchedulesRepositoryInMemory {
       const scheduleIsValid = scheduleModel.validateSync({
         ...schedule,
       });
+
       this.schedules.push(scheduleIsValid);
     }
 
@@ -50,7 +51,7 @@ class SchedulesRepositoryInMemory {
     );
     if (!schedule) {
       throw new Error("Day schedule not found");
-    } else if (schedule.scheduleForHour.length > 20) {
+    } else if (schedule.scheduleForHour.length >= 20) {
       throw new Error("Day schedule limit");
     }
 
@@ -63,8 +64,8 @@ class SchedulesRepositoryInMemory {
         patients: [{ id: patientId, status: "unfulfilled", note: "" }],
       });
     } else {
-      if (schedule.scheduleForHour.length > 2) {
-        throw new Error("Horario indisponivel");
+      if (schedule.scheduleForHour[scheduleHourIndex].patients.length >= 2) {
+        throw new Error("Limit of calls per time reached");
       }
       schedule.scheduleForHour[scheduleHourIndex].patients.push({
         id: patientId,
@@ -143,7 +144,6 @@ class SchedulesRepositoryInMemory {
           patientId
       ) {
         let schedule = { ...this.schedules[scheduleIndex] };
-        // console.log(schedule);
         schedule.scheduleForHour[i].patients[0].status =
           newValues.status || schedule.scheduleForHour[i].patients[0].status;
         schedule.scheduleForHour[i].patients[0].note =

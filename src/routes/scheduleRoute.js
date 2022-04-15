@@ -14,7 +14,7 @@ scheduleRoutes.get(
   scheduleController.getOneById.bind(scheduleController)
 );
 scheduleRoutes.get(
-  "/:hour",
+  "/hour/:hour",
   scheduleController.getOneByHour.bind(scheduleController)
 );
 scheduleRoutes.post("/", scheduleController.store.bind(scheduleController));

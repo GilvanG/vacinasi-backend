@@ -14,7 +14,7 @@ class ScheduleController {
       const schedules = await this.schedulesRepository.list();
       return response.status(200).json(schedules);
     } catch (error) {
-      return response.status(400).send(error);
+      return response.status(400).json({ error: error.message });
     }
   }
 
@@ -47,7 +47,7 @@ class ScheduleController {
       }
       return response.status(201).json({ schedule, patient });
     } catch (error) {
-      return response.status(400).send(error);
+      return response.status(400).json({ error: error.message });
     }
   }
 
@@ -75,11 +75,12 @@ class ScheduleController {
     try {
       const { hour } = request.params;
       const schedule = await this.schedulesRepository.findByHour(hour);
+      console.log(schedule);
 
-      if (schedule) {
-        return response.ststus(200).json({ schedule });
+      if (!schedule) {
+        return response.status(404).json({ message: "Schedule not found" });
       }
-      response.status(404).json({ message: "Schedule not found" });
+      return response.status(200).json({ schedule });
     } catch (error) {
       response.status(400).send(error);
     }
