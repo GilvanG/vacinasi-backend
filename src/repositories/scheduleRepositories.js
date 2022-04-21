@@ -6,7 +6,7 @@ import { scheduleModel } from "../models/scheduleModel.js";
 class SchedulesRepositoryInMemory {
   patientRepository = [];
   constructor(PatientRepository) {
-    this.patientRepository = PatientRepository.patients;
+    this.patientRepository = PatientRepository;
   }
   schedules = [];
 
@@ -39,7 +39,7 @@ class SchedulesRepositoryInMemory {
   }
 
   async newHourOfSchedule({ scheduleId, hourSchedule, patientId }) {
-    const patient = this.patientRepository.find(
+    const patient = this.patientRepository.patients.find(
       (patient) => patient.id === patientId
     );
     if (!patient) {
@@ -114,8 +114,24 @@ class SchedulesRepositoryInMemory {
   }
 
   async list() {
-    const schedulesList = this.schedules.map(({ id, createdOn, ...rest }) => {
-      return { ...rest };
+    const schedulesList = this.schedules.map(({ createdOn, scheduleForHour, ...rest }) => {
+      return {
+        ...rest,
+        scheduleForHour: scheduleForHour.map(
+          ({ patients, ...rest }) => {
+            return {
+              ...rest,
+              patients: patients.map(({ id, ...rest }) => {
+                return {
+                  id,
+                  ...rest,
+                  ...this.patientRepository.findById(id)
+                };
+              })
+            }
+          }
+        ),
+      };
     });
     return schedulesList;
   }
@@ -139,9 +155,9 @@ class SchedulesRepositoryInMemory {
     ) {
       if (
         String(this.schedules[scheduleIndex].scheduleForHour[i].hour) ===
-          String(hourSchedule) &&
+        String(hourSchedule) &&
         this.schedules[scheduleIndex].scheduleForHour[i].patients[0].id ===
-          patientId
+        patientId
       ) {
         let schedule = { ...this.schedules[scheduleIndex] };
         schedule.scheduleForHour[i].patients[0].status =
@@ -161,9 +177,9 @@ class SchedulesRepositoryInMemory {
       }
       if (
         String(this.schedules[scheduleIndex].scheduleForHour[i].hour) ===
-          String(hourSchedule) &&
+        String(hourSchedule) &&
         this.schedules[scheduleIndex].scheduleForHour[i].patients[1].id ===
-          patientId
+        patientId
       ) {
         let schedule = { ...this.schedules[scheduleIndex] };
         schedule.scheduleForHour[i].patients[1].status =
