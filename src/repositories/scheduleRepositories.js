@@ -6,7 +6,7 @@ import { scheduleModel } from "../models/scheduleModel.js";
 class SchedulesRepositoryInMemory {
   patientRepository = [];
   constructor(PatientRepository) {
-    this.patientRepository = PatientRepository.patients;
+    this.patientRepository = PatientRepository?.patients;
   }
   schedules = [];
 
@@ -139,9 +139,9 @@ class SchedulesRepositoryInMemory {
     ) {
       if (
         String(this.schedules[scheduleIndex].scheduleForHour[i].hour) ===
-          String(hourSchedule) &&
+        String(hourSchedule) &&
         this.schedules[scheduleIndex].scheduleForHour[i].patients[0].id ===
-          patientId
+        patientId
       ) {
         let schedule = { ...this.schedules[scheduleIndex] };
         schedule.scheduleForHour[i].patients[0].status =
@@ -161,9 +161,9 @@ class SchedulesRepositoryInMemory {
       }
       if (
         String(this.schedules[scheduleIndex].scheduleForHour[i].hour) ===
-          String(hourSchedule) &&
+        String(hourSchedule) &&
         this.schedules[scheduleIndex].scheduleForHour[i].patients[1].id ===
-          patientId
+        patientId
       ) {
         let schedule = { ...this.schedules[scheduleIndex] };
         schedule.scheduleForHour[i].patients[1].status =

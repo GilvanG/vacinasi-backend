@@ -39,8 +39,10 @@ class PatientRepositoryInMemory {
     const patientIndex = this.patients.findIndex(
       (patient) => patient.id === patientId
     );
-    if (patientIndex && patientIndex !== -1) {
-      return this.patients.splice(patientIndex, patientIndex);
+    if (patientIndex !== -1) {
+      // console.log(this.patients)
+      this.patients = (this.patients.splice(patientIndex, patientIndex))
+      return this.patients;
     }
     throw new Error("Patient Not Found");
   }
@@ -49,7 +51,7 @@ class PatientRepositoryInMemory {
     let patientIndex = this.patients.findIndex(
       (patient) => patient.id === patientId
     );
-    if (patientIndex && patientIndex !== -1) {
+    if (patientIndex !== -1) {
       const name = newValues.name || this.patients[patientIndex].name;
       const birthDate =
         newValues.birthDate || this.patients[patientIndex].birthDate;
