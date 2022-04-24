@@ -24,7 +24,7 @@ class PatientRepositoryInMemory {
     return this.patients.find((patient) => patient.name === name);
   }
 
-  async findById(id) {
+  findById(id) {
     return this.patients.find((patient) => patient.id === id);
   }
 
