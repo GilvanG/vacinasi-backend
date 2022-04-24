@@ -17,6 +17,4 @@ app.use(morgan("dev"));
 app.use(helmet())
 app.use(router);
 
-app.listen(PORT, () => {
-  console.log(`Server Running on PORT ${PORT}`);
-});
+export { app };
