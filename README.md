@@ -32,6 +32,11 @@ horário.
 3. Instale as dependencias do projeto: Utilize o comando `yarn` ou `npm` em seu terminal.
 4. Inicialize a aplicação: Utilize o comando `yarn start` ou `npm start` em seu terminal.
 
+## OBS
+
+- Algumas branchs foram fechadas, mas todo o projeto foi cronstruído utilizando o modelo do gitflow, tal fato pode ser comprovado observando todos os merges realizados.
+- Para funcionamento correto da aplicação mantenha tanto o backend quanro o frontend ativos.
+
 ## Contribuir
 
 Para contribuir com Vacinasi, siga estas etapas:
